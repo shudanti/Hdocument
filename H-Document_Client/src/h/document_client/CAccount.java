@@ -5,6 +5,7 @@
  */
 package h.document_client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,12 +27,9 @@ public class CAccount extends ClientObject{
         
     }
     
-    public List<String> GetAllDocIDBelongToAnUser()
-    {
-        return (List<String>)ClientObjectManager.ExecuteStaticMethod("Document", "GetAllDocIDBelongToAnUser", this.Handle);
-    }
     
-    private String GetUserName()
+    
+    public String GetUserName()
     {
        return (String)ClientObjectManager.GetAttributeValue(Handle, "UserName");
                 
@@ -40,5 +38,28 @@ public class CAccount extends ClientObject{
     public void SetPassword(String newPasword)
     {
         
+    }
+
+    public List<String> GetAllFriendID() {
+       List<String> kq = new ArrayList<String>();
+       
+        String[] strs = (String[])ClientObjectManager.ExecuteMethod(this.Handle, "GetAllFriendID", null);
+        
+        for(int i = 0; i< strs.length; i++)
+        {
+            kq.add(strs[i]);
+        }
+        return kq;
+    }
+
+    List<String> GetAllDocIDBelongToUser() {
+       List<String> kq = new ArrayList<String>();
+        String[] strs = (String[])ClientObjectManager.ExecuteMethod(this.Handle, "GetAllDocIDBelongToUser", null);
+        
+        for(int i = 0; i< strs.length; i++)
+        {
+            kq.add(strs[i]);
+        }
+        return kq;
     }
 }

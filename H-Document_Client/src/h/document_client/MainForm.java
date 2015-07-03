@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 /**
@@ -21,7 +22,7 @@ public class MainForm extends javax.swing.JFrame {
     public  CAccount Account ;
     public  DocumentForm documentForm;
     public List<CDocument> documents;
-    public List<String> friends;
+    public List<CAccount> friends;
     /**
      * Creates new form MainForm
      */
@@ -30,36 +31,9 @@ public class MainForm extends javax.swing.JFrame {
         initComponents();
         Account = account;
         
-         System.out.println("get doc handles" );
-        List<String> docHandles = (List<String>)Account.GetAllDocIDBelongToAnUser();
         
-         System.out.println("handles" + docHandles.size());
-         
-        documents = new ArrayList<CDocument>();
-        for(String s : docHandles)
-        {
-            documents.add(new CDocument(s));
-        }
         
          
-        jList1.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-                JList list = (JList)evt.getSource();
-                if (evt.getClickCount() == 2) {
-
-                    // Double-click detected
-                    int index = list.locationToIndex(evt.getPoint());
-                    
-                    documentForm = new DocumentForm(documents.get(index));
-                    documentForm.setVisible(true);
-                    
-                } else if (evt.getClickCount() == 3) {
-
-                    // Triple-click detected
-                    int index = list.locationToIndex(evt.getPoint());
-                }
-            }
-        });
         
         //cap nhat list
         UpdateView();
@@ -82,6 +56,8 @@ public class MainForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -112,6 +88,20 @@ public class MainForm extends javax.swing.JFrame {
 
         jButton2.setText("Add friend");
 
+        jButton3.setText("Share");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Refesh");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -125,7 +115,12 @@ public class MainForm extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 486, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton2)
@@ -146,7 +141,10 @@ public class MainForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jButton3)
+                            .addComponent(jButton4)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -161,13 +159,25 @@ public class MainForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        CDocument doc= new CDocument("New document", "");
-        
-        this.documentForm = new DocumentForm(doc);
+        CDocument doc = new CDocument("New document", "");
+        doc.RegisterToDocument(Account.Handle);
+        this.documentForm = new DocumentForm(doc, Account);
         
         this.documentForm.setVisible(true);
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+       AddFriendToDocumentDlg dlg = new AddFriendToDocumentDlg(documents, friends);
+       
+        dlg.setVisible(true);
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        UpdateView();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -177,6 +187,8 @@ public class MainForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JList jList1;
@@ -187,17 +199,66 @@ public class MainForm extends javax.swing.JFrame {
 
     public void UpdateView() {
         
+        List<String> docHandles = Account.GetAllDocIDBelongToUser();
+
+        documents = new ArrayList<CDocument>();
+        for(String s : docHandles)
+        {
+            documents.add(new CDocument(s));
+        }
+         
         
         String [] docTitles = new String[documents.size()];
-        
+        DefaultListModel model = new DefaultListModel();
         for(int i = 0; i < documents.size(); i++)
         {
-            docTitles[i] = documents.get(i).GetTitle();
+            model.addElement( documents.get(i).GetTitle());
         }
         
-        jList1 = new JList(docTitles);
-        jList1.updateUI();
+        jList1 = new JList(model);
         
-        this.documentForm.UpdateView();
+        jScrollPane1.setViewportView(jList1);
+        
+        jList1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList)evt.getSource();
+                if (evt.getClickCount() == 1) {
+                   jButton3.setEnabled(true);
+                }
+                else if (evt.getClickCount() == 2) {
+
+                    // Double-click detected
+                    int index = list.locationToIndex(evt.getPoint());
+                    
+                    documentForm = new DocumentForm(documents.get(index), Account);
+                    documentForm.setVisible(true);
+                    
+                } else if (evt.getClickCount() == 3) {
+
+                    // Triple-click detected
+                    int index = list.locationToIndex(evt.getPoint());
+                }
+            }
+        });
+        
+        
+        List<String> accHandles = Account.GetAllFriendID();
+       
+         friends = new ArrayList<CAccount>();
+         for(String s : accHandles)
+        {
+            friends.add(new CAccount(s));
+        }
+         
+         String [] names = new String[friends.size()];
+        DefaultListModel fmodel = new DefaultListModel();
+        for(int i = 0; i < friends.size(); i++)
+        {
+            fmodel.addElement( friends.get(i).GetUserName());
+        }
+        
+        jList2 = new JList(fmodel);
+        
+        jScrollPane2.setViewportView(jList2);
     }
 }

@@ -69,7 +69,7 @@ public class ServerCommunitorThread extends Thread{
 		}
 		catch(IOException e)
 		{
-			System.out.println("There're some error");
+			System.out.println("There're some error: "+e);
 		} catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientComunitorThread.class.getName()).log(Level.SEVERE, null, ex);
         }

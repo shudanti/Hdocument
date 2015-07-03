@@ -20,15 +20,19 @@ public class CDocument extends ClientObject{
         this.Handle = ClientObjectManager.CreateNewObject("Document");
         ClientObjectManager.SetAttributeValue(Handle, "Title", title);
         ClientObjectManager.SetAttributeValue(Handle, "Paragragh", paragragh);
-        ClientObjectManager.AddBindingInfor(Handle);
+       // ClientObjectManager.AddBindingInfor(Handle);
     }
     
     public CDocument(String handle)
     {
         this.Handle = handle;
-        ClientObjectManager.AddBindingInfor(Handle);
+        //ClientObjectManager.AddBindingInfor(Handle);
     }
    
+    public void RegisterToDocument(String userID)
+    {
+        ClientObjectManager.ExecuteMethod(this.Handle,"RegisterToDocument" , userID);
+    }
     
     public void SetTitle(String newTitle)
     {
@@ -48,6 +52,16 @@ public class CDocument extends ClientObject{
     public String GetParagragh()
     {
         return (String)ClientObjectManager.GetAttributeValue(Handle, "Paragragh");
+    }
+
+    void AddHistoryChange(String UserName) {
+        ClientObjectManager.ExecuteMethod(this.Handle,"AddHistoryChange" , UserName);
+    }
+
+    String GetAllChangeHistory() {
+     
+               return (String)ClientObjectManager.ExecuteMethod(this.Handle,"GetAllChangeHistory" , null);
+
     }
     
 }

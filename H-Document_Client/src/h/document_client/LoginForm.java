@@ -132,8 +132,9 @@ public class LoginForm extends javax.swing.JFrame {
                  case "Success":
                  {
                      CAccount account = new CAccount((String)is.readObject());
-                     ClientObjectManager.thread = new ServerCommunitorThread(s,is,os);
-                     ClientObjectManager.thread .start();
+                     ClientObjectManager.s = s;
+                     ClientObjectManager.os = os;
+                     ClientObjectManager.is = is;
                      
                      
                      this.mainForm = new MainForm(account);

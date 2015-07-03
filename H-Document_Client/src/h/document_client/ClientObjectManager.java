@@ -7,7 +7,10 @@ package h.document_client;
 
 import h.document_server.HDocument_Server;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -16,20 +19,24 @@ import java.util.logging.Logger;
  */
 public class ClientObjectManager {
     
-    public static ServerCommunitorThread thread = null;
+    public static ObjectInputStream is;
+    public static ObjectOutputStream os;
+    public static Socket s;
     
     public static String CreateNewObject(String ObjectType) 
     {
         try {
-            thread.os.writeObject("CreateNewObject");
-            thread.os.writeObject(ObjectType);
-            return (String)thread.is.readObject();
+            os.writeObject("CreateNewObject");
+            os.writeObject(ObjectType);
+            return (String)is.readObject();
         } catch (IOException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
         }
-        return "";
+        
     }
     
    
@@ -37,94 +44,107 @@ public class ClientObjectManager {
     public static boolean SetAttributeValue(String Handle, String strAttributeName, Object newValue)
     {
         try {
-            thread.os.writeObject("SetAttributeValue");
-            thread.os.writeObject(Handle);
-            thread.os.writeObject(strAttributeName);
-            thread.os.writeObject(newValue);
-            return (boolean)thread.is.readObject();
+            os.writeObject("SetAttributeValue");
+            os.writeObject(Handle);
+            os.writeObject(strAttributeName);
+            os.writeObject(newValue);
+            return (boolean)is.readObject();
         } catch (IOException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
         finally
         {
-            return false;
+            
         }
     }
     
      public static Object GetAttributeValue(String Handle, String strAttributeName)
      {
          try {
-            thread.os.writeObject("GetAttributeValue");
-            thread.os.writeObject(Handle);
-            thread.os.writeObject(strAttributeName);
+            os.writeObject("GetAttributeValue");
+            os.writeObject(Handle);
+            os.writeObject(strAttributeName);
         
-            return thread.is.readObject();
+            return is.readObject();
         } catch (IOException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
         finally
         {
-            return null;
+            
         }
      }
      
     public static Object ExecuteMethod(String Handle, String strFunctionName, Object param)
     {
         try {
-            thread.os.writeObject("ExecuteMethod");
-            thread.os.writeObject(Handle);
-            thread.os.writeObject(strFunctionName);
-            thread.os.writeObject(param);
-            return thread.is.readObject();
+            os.writeObject("ExecuteMethod");
+            os.writeObject(Handle);
+            os.writeObject(strFunctionName);
+            os.writeObject(param);
+            return is.readObject();
         } catch (IOException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
         finally
         {
-            return null;
+            
         }
     }
     
     public static Object ExecuteStaticMethod(String ObjectType, String strFunctionName, Object param)
     {
         try {
-            thread.os.writeObject("ExecuteStaticMethod");
-            thread.os.writeObject(ObjectType);
-            thread.os.writeObject(strFunctionName);
-            thread.os.writeObject((String)param);
-            return thread.is.readObject();
+            os.writeObject("ExecuteStaticMethod");
+            os.writeObject(ObjectType);
+            os.writeObject(strFunctionName);
+            os.writeObject((String)param);
+            Object o = is.readObject();
+            System.out.println(o);
+                return o;
         } catch (IOException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            
+            return null;
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
         finally
         {
-            return null;
+            
         }
     }
     
     public static boolean AddBindingInfor(String Handle)
         {
             try {
-            thread.os.writeObject("ExecuteStaticMethod");
-            thread.os.writeObject(Handle);
+            os.writeObject("ExecuteStaticMethod");
+            os.writeObject(Handle);
           
-            return (boolean)thread.is.readObject();
+            return (boolean)is.readObject();
         } catch (IOException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientObjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
         finally
         {
-            return false;
+           
         }
         }
 }
