@@ -26,9 +26,9 @@ public class DocumentDAO {
         
         try
         {
-            DataProvider.ExecuteUpdtae("INSERT INTO document  "
-                + "values ('"+dto.ID+"','"+dto.Paragragh+"');");
-            kq = true;
+            kq = DataProvider.ExecuteUpdtae("INSERT INTO document  "
+                + "values ('"+dto.ID+"','" + dto.Title+"','" + dto.Paragragh+"')");
+            
         }
         catch(Exception e)
         {
@@ -66,7 +66,7 @@ public class DocumentDAO {
         Object kq =null;
         
         ResultSet rs = DataProvider.ExecuteSelect("select * from document "
-                + "where DocumentID like '"+ Handle +"'");
+                + "where ID like '"+ Handle +"'");
         
         
         try {
@@ -89,7 +89,7 @@ public class DocumentDAO {
 
                 return DataProvider.ExecuteUpdtae("update document set "
                         + strAttributeName + "='" + newValue + "' "
-                        + "where DocumentID like '"+ Handle +"'");    
+                        + "where ID like '"+ Handle +"'");    
     }
 
     
@@ -104,7 +104,65 @@ public class DocumentDAO {
                 while(rs.next())
                 {
                    
-                    kq.add(rs.getString("DocumentID"));
+                    kq.add(rs.getString("ID"));
+                    
+                    
+                } 
+                rs.close();
+            } 
+            catch (SQLException ex) 
+            {
+                
+            }
+        
+        return kq;
+    }
+
+    public static void RegisterToDocument(String Handle, String string) {
+          DataProvider.ExecuteUpdtae("INSERT INTO account_document  "
+                + "values ('"+string+ "','"  + Handle +"')");  
+    }
+
+    public static List<String> GetAllFriendIDBelongToAnUser(String Handle) {
+        List<String> kq = new ArrayList<String>();
+        
+        ResultSet rs = DataProvider.ExecuteSelect("select * from friend "
+                + "where AccountID1 like '"+ Handle +"' ");
+        
+        try {
+                while(rs.next())
+                {
+                   
+                    kq.add(rs.getString("AccountID2"));
+                    
+                    
+                } 
+                rs.close();
+            } 
+            catch (SQLException ex) 
+            {
+                
+            }
+        
+        return kq;
+    }
+
+    public static void AddHistoryChange(String Handle, String comment, String date) {
+        DataProvider.ExecuteUpdtae("INSERT INTO document_history  "
+                + "values ('"+Handle+ "','"  + comment + "','"  + date + "')");  
+    }
+
+    public static Object GetAllChangeHistory(String Handle) {
+        String kq = "";
+        
+        ResultSet rs = DataProvider.ExecuteSelect("select * from document_history "
+                + "where DocumentID like '"+ Handle +"' ");
+        
+        try {
+                while(rs.next())
+                {
+                   
+                    kq += "\r\n" + rs.getString("Comment") + " at " + rs.getString("Date");
                     
                     
                 } 

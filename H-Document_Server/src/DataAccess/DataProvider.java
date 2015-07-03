@@ -27,8 +27,8 @@ public class DataProvider {
     private static final String DB_URL = "jdbc:mysql://localhost/hdocument";
 
     //  Database credentials
-    private static final String USER = "admin";
-    private static final String PASS = "admin";
+    private static final String USER = "root";
+    private static final String PASS = "liclac";
     
     private static Connection conn = null;
     private static  Statement stmt = null;

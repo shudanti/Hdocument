@@ -9,6 +9,8 @@ import DataAccess.AccountDAO;
 import DataAccess.DocumentDAO;
 import DataAccess.DocumentDTO;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,16 +22,7 @@ public class Document extends ServerObject{
      
     
      
-    public static List<String> GetAllDocIDBelongToAnUser(String userID)
-    {
-        List<String> rs = new ArrayList<String>();
-        
-        rs = DocumentDAO.GetAllDocIDBelongToAnUser(userID);
-        
-
-        
-        return rs;
-    }
+    
 
     static List<ServerObject> GetAllDocument() {
         List<ServerObject> rs = new ArrayList<ServerObject>();
@@ -43,10 +36,18 @@ public class Document extends ServerObject{
         
         return rs;
     }
+
+    private Object RegisterToDocument(String string) {
+        
+        DocumentDAO.RegisterToDocument(this.Handle, string);
+        
+        return null;
+    }
+    
      
      private Document(String handle)
      {
-         this.Handle = Handle;
+         this.Handle = handle;
      }
 
     //private Document(DocumentDTO documentDTO) {
@@ -85,13 +86,22 @@ public class Document extends ServerObject{
     @Override
         public  boolean SetAttributeValue(String strAttributeName, Object newValue)
         {
-            this.NotifyAll();
+            //this.NotifyAll();
             return DocumentDAO.SetAttributeValue(this.Handle, strAttributeName, newValue);
         }
 
         @Override
         public  Object ExecuteFunction(String strFunctionName, Object param)
         {
+            switch(strFunctionName)
+            {
+                case "GetAllChangeHistory":
+                    return GetAllChangeHistory();
+                case "AddHistoryChange":
+                    return AddHistoryChange(param);
+                case "RegisterToDocument":
+                    return RegisterToDocument((String)param);
+            }
             return null;
         }
         
@@ -100,10 +110,24 @@ public class Document extends ServerObject{
             switch(strFunctionName)
             {
                 
-                case "GetAllDocIDBelongToAnUser":
-                    return GetAllDocIDBelongToAnUser((String)param);
+                
+                
             }
             
             return null;
         }
+
+    private Object AddHistoryChange(Object param) {
+        
+        String date = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "-" 
+                + Calendar.getInstance().get(Calendar.MONTH) + "-" 
+                + Calendar.getInstance().get(Calendar.YEAR);
+        DocumentDAO.AddHistoryChange(this.Handle, param + " has change the document.", date);
+        return null;
+    }
+
+    private Object GetAllChangeHistory() {
+
+        return DocumentDAO.GetAllChangeHistory(this.Handle);
+    }
 }

@@ -8,6 +8,7 @@ package BOs;
 
 import DataAccess.AccountDAO;
 import DataAccess.AccountDTO;
+import DataAccess.DocumentDAO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class Account extends ServerObject{
     
     private Account(String handle)
     {
-        this.Handle = Handle;
+        this.Handle = handle;
     }
    // public AttributeList attributes = new AttributeList();
    
@@ -73,6 +74,15 @@ public class Account extends ServerObject{
         @Override
         public  Object ExecuteFunction(String strFunctionName, Object param)
         {
+            switch(strFunctionName)
+            {
+                
+                case "GetAllFriendID": 
+                    return GetAllFriendID();
+                case "GetAllDocIDBelongToUser":
+                    return GetAllDocIDBelongToUser();
+            }
+            
             return null;
         }
     
@@ -89,4 +99,26 @@ public class Account extends ServerObject{
             
             return null;
         }
+
+    private Object GetAllFriendID() {
+        List<String> rs = new ArrayList<String>();
+        
+        rs = DocumentDAO.GetAllFriendIDBelongToAnUser(this.Handle);
+        
+
+        
+        return rs.toArray(new String[rs.size()]);
+    }
+    
+    
+    public String[] GetAllDocIDBelongToUser()
+    {
+        List<String> rs = new ArrayList<String>();
+        
+        rs = DocumentDAO.GetAllDocIDBelongToAnUser(this.Handle);
+        
+
+        
+        return rs.toArray(new String[rs.size()]);
+    }
 }

@@ -66,7 +66,7 @@ public class AccountDAO {
             Object kq =null;
         
         ResultSet rs = DataProvider.ExecuteSelect("select * from account "
-                + "where AccountID like '"+ Handle +"'");
+                + "where ID like '"+ Handle +"'");
         
         
         try {
@@ -89,7 +89,7 @@ public class AccountDAO {
         
         return DataProvider.ExecuteUpdtae("update account set "
                 + strAttributeName + "='" + newValue + "' "
-                + "where AccountID like '"+ Handle +"'");
+                + "where ID like '"+ Handle +"'");
         
         
         
@@ -105,7 +105,7 @@ public class AccountDAO {
                 while(rs.next())
                 {
                    
-                    kq.add(rs.getString("AccountID"));
+                    kq.add(rs.getString("ID"));
                     
                     
                 } 

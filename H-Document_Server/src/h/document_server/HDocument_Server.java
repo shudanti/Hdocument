@@ -50,14 +50,14 @@ public class HDocument_Server {
                                  os = new ObjectOutputStream(ss.getOutputStream());
                                     //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
 	
-
+                                        
                                     //lay thong tin dang nhap
                                  System.out.println("getparam");
                                  Object param = is.readObject();
 
                                   //chung nhan
                                  String id = (String)ServerObjectManager.ExecuteStaticMethod("Account", "Validate", param);
-
+                                 
                                  System.out.println("sendresult");
                                  if(id.compareTo("") == 0)
                                  {
@@ -81,7 +81,7 @@ public class HDocument_Server {
                                  else
                                  {
                                      os.writeObject("Limited");
-                                     is.close();
+                                     
                                      os.close();
 
                                  }

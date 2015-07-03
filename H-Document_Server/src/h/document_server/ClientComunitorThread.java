@@ -80,8 +80,9 @@ public class ClientComunitorThread extends Thread{
                     Object param = is.readObject();
                     System.out.println(param);
                     Object o = ServerObjectManager.ExecuteStaticMethod(objectType, functionName, param);
-                    System.out.println("send " + o);
-                    os.writeObject((Serializable)o);
+                  
+                   
+                    os.writeObject(o);
                     break;
                 }
                 case "ExecuteMethod":
@@ -117,6 +118,7 @@ public class ClientComunitorThread extends Thread{
                 {
                     int Handle =  (int)is.readObject();
                     os.writeObject(ServerObjectManager.FindObject(Handle));
+                        
                     break;
                 }
                 case "AddBindingInfor":
