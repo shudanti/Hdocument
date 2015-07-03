@@ -28,7 +28,7 @@ public class DataProvider {
 
     //  Database credentials
     private static final String USER = "root";
-    private static final String PASS = "liclac";
+    private static final String PASS = "1234";
     
     private static Connection conn = null;
     private static  Statement stmt = null;
