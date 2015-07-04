@@ -10,8 +10,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyledDocument;
 
 /**
  *
@@ -158,10 +163,14 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-        CDocument doc = new CDocument("New document", "");
+        StyledDocument sdoc = new DefaultStyledDocument();
+        CDocument doc = new CDocument("New document", sdoc);
         doc.RegisterToDocument(Account.Handle);
-        this.documentForm = new DocumentForm(doc, Account);
+        try {
+            this.documentForm = new DocumentForm(doc, Account);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         this.documentForm.setVisible(true);
         
@@ -230,7 +239,11 @@ public class MainForm extends javax.swing.JFrame {
                     // Double-click detected
                     int index = list.locationToIndex(evt.getPoint());
                     
-                    documentForm = new DocumentForm(documents.get(index), Account);
+                    try {
+                        documentForm = new DocumentForm(documents.get(index), Account);
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     documentForm.setVisible(true);
                     
                 } else if (evt.getClickCount() == 3) {
