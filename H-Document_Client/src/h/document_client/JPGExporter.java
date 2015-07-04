@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.AttributedCharacterIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -35,7 +36,7 @@ public class JPGExporter extends Exporter{
             graphics.fillRect(0, 0, 200, 50);
             graphics.setColor(Color.BLACK);
             graphics.setFont(new Font("Arial Black", Font.BOLD, 20));
-            graphics.drawString(doc.GetParagragh(), 10, 25);
+            graphics.drawString((AttributedCharacterIterator) doc.GetParagragh(), 10, 25);
             ImageIO.write(bufferedImage, "jpg", new File(
                     path + ".jpg"));
             System.out.println("Image Created");
