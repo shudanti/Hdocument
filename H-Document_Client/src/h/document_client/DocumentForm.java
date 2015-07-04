@@ -40,7 +40,7 @@ public class DocumentForm extends javax.swing.JFrame {
     public void UpdateView()
     {
         jTextField1.setText(doc.GetTitle());
-        jTP_Document.setText(doc.GetParagragh());
+        jTP_Document.setStyledDocument(doc.GetParagragh());
         
         jTextArea2.setText(doc.GetAllChangeHistory());
     }
@@ -221,7 +221,7 @@ public class DocumentForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu5MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-                doc.SetParagragh(jTP_Document.getText());
+                doc.SetParagragh(jTP_Document.getStyledDocument());
                 doc.SetTitle(jTextField1.getText());
                 doc.AddHistoryChange(acc.GetUserName());
                 
