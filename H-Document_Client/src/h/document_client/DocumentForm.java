@@ -31,10 +31,10 @@ public class DocumentForm extends javax.swing.JFrame {
         jBt_Bold.addActionListener(new StyledEditorKit.BoldAction());
         jBt_Italic.addActionListener(new StyledEditorKit.ItalicAction());
         jBt_Underline.addActionListener(new StyledEditorKit.UnderlineAction());
-        UpdateView();
-        //StyledDocument st = jTP_Document.getStyledDocument();
-        //String a = st.getText(1,5);
         
+        StyledDocument st = jTP_Document.getStyledDocument();
+        //String a = st.getText(1,5);
+        UpdateView();
     }
 
     public void UpdateView()
